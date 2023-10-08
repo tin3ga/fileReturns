@@ -5,6 +5,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from captcha_handler import CaptchaHandler
+
 load_dotenv("G:\My Drive\.env")
 
 OPTIONS = webdriver.ChromeOptions()
@@ -42,11 +44,17 @@ class WebPageHandler:
         password_input.send_keys(PASSWORD)
 
         # get captcha image, saves it in root directory
-        captcha = driver.find_element(By.ID, value='captcha_img')
-        captcha.screenshot('captcha.png')
+        with open('captcha.png', 'wb') as file:
+            captcha = driver.find_element(By.XPATH, value='//*[@id="captcha_img"]').screenshot_as_png
+            file.write(captcha)
 
-        # captcha_input = driver.find_element(By.XPATH, value='//*[@id="captcahText"]')
-        # captcha_input.send_keys()
+        captcha_ans = CaptchaHandler().process_captcha()
+
+        captcha_input = driver.find_element(By.XPATH, value='//*[@id="captcahText"]')
+        captcha_input.send_keys(captcha_ans)
+
+        login_button = driver.find_element(By.XPATH, value='//*[@id="loginButton"]')
+        login_button.click()
 
 
 page = WebPageHandler()
