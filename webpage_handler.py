@@ -4,6 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
 
 from captcha_handler import CaptchaHandler
 
@@ -43,11 +44,10 @@ class WebPageHandler:
         password_input = driver.find_element(By.ID, value='xxZTT9p2wQ')
         password_input.send_keys(PASSWORD)
 
-        # get captcha image, saves it in root directory
+        # download captcha image, saves it in root directory
         with open('captcha.png', 'wb') as file:
             captcha = driver.find_element(By.XPATH, value='//*[@id="captcha_img"]').screenshot_as_png
             file.write(captcha)
-
         captcha_ans = CaptchaHandler().process_captcha()
 
         captcha_input = driver.find_element(By.XPATH, value='//*[@id="captcahText"]')
@@ -55,7 +55,26 @@ class WebPageHandler:
 
         login_button = driver.find_element(By.XPATH, value='//*[@id="loginButton"]')
         login_button.click()
+        returns_menu = driver.find_element(By.XPATH, value='//*[@id="ddtopmenubar"]/ul/li[3]/a')
+
+        actions = ActionChains(driver)
+
+        actions.move_to_element(returns_menu).perform()
+        file_nil = driver.find_element(By.XPATH, value='//*[@id="Returns"]/li[4]/a')
+        actions.move_to_element(file_nil).perform()
+
+        file_nil.click()
+
+        # click on tax obligation dropdown list
+        driver.find_element(By.XPATH, value='//*[@id="regType"]').click()
+
+        # select resident individual
+        driver.find_element(By.XPATH, value='//*[@id="regType"]/option[2]').click()
+
+        # click on next
+        driver.find_element(By.XPATH, value='//*[@id="btnSubmit"]').click()
 
 
-page = WebPageHandler()
-page.login()
+if __name__ == '__main__':
+    page = WebPageHandler()
+    page.login()
