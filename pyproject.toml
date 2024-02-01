@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "filereturns"
+version = "0.1.0"
+description = ""
+authors = ["tin3ga"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pillow = "^10.2.0"
+selenium = "^4.17.2"
+python-dotenv = "^1.0.1"
+pytesseract = "^0.3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
