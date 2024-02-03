@@ -1,3 +1,4 @@
+import os
 import pytesseract
 from PIL import Image
 
@@ -5,9 +6,10 @@ from PIL import Image
 class CaptchaHandler:
     @staticmethod
     def process_captcha():
-        '''takes a png image as input. converts it into a string. performs calulation based on operation. returns answer'''
+        """takes a png image as input. converts it into a string. performs calulation based on operation. returns
+        answer"""
         image = Image.open('./captcha.png')
-        pytesseract.pytesseract.tesseract_cmd = r'C:\Users\gideon\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
+        pytesseract.pytesseract.tesseract_cmd = os.getenv('TESSERACT_OCR_PATH')
         text = pytesseract.image_to_string(image=image, lang='eng', config='--oem 1')
         print(text)
         text = text[:-2]
